@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pollution Report System</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <script src="script.js" defer></script> <!-- Link to your JavaScript file -->
+</head>
+<body>
+    <div class="container">
+        <h1>🌊 Water Pollution Reporter</h1>
+        
+        <form id="pollutionForm">
+            <div class="form-group">
+                <label for="location">Location (Water Body Name)</label>
+                <input type="text" id="location" name="location" required>
+            </div>
+
+            <div class="form-group">
+                <label for="pollutionType">Type of Pollution</label>
+                <select id="pollutionType" name="pollutionType" required>
+                    <option value="">Select pollution type</option>
+                    <option value="plastic">Plastic Waste</option>
+                    <option value="sewage">Sewage/Untreated Water</option>
+                    <option value="chemical">Chemical Discharge</option>
+                    <option value="oil">Oil Spill</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="4" placeholder="Describe what you observed..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="mobile">Mobile Number</label>
+                <input type="tel" id="mobile" name="mobile" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Your Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <button type="submit" id="submitBtn">Submit Report</button>
+        </form>
+
+        <div id="loadingDiv" class="loading hidden">
+            <p>🔄 Analyzing your report with AI...</p>
+        </div>
+
+        <div id="resultDiv" class="status hidden"></div>
+    </div>
+</body>
+</html>
