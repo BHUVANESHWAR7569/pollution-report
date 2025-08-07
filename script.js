@@ -1,18 +1,43 @@
-// Initialize EmailJS
-emailjs.init("i9cCFwggpMM-VLMKW"); // Replace with your actual public key
+// script.js
 
-// Email Service Class
+// Initialize EmailJS with your public key
+emailjs.init("i9cCFwggpMM-VLMKW");
+
+// Add event listener to the form submission
+document.getElementById('pollutionForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        mobile: document.getElementById('mobile').value,
+        location: document.getElementById('location').value,
+        issueType: document.getElementById('issueType').value,
+        description: document.getElementById('description').value
+    };
+
+    const emailService = new EmailService();
+    const result = await emailService.sendReport(formData);
+
+    if (result.success) {
+        alert("Report sent successfully!");
+        document.getElementById('pollutionForm').reset();
+    } else {
+        alert("Failed to send report: " + result.error);
+    }
+});
+
 class EmailService {
     constructor() {
-        this.serviceID = 'service_eywet1s'; // Replace with your actual service ID
-        this.templateID = 'template_hbekyv9'; // Replace with your actual template ID
-        this.replyTemplateID = 'template_9ewozzh'; // Replace with your reply template ID
+        this.serviceID = 'service_eywet1s';
+        this.templateID = 'template_hbekyv9';
+        this.replyTemplateID = 'template_9ewozzh';
     }
 
     async sendReport(formData) {
         const templateParams = {
             location: formData.location,
-            pollutionType: formData.pollutionType,
+            pollutionType: formData.issueType,
             description: formData.description,
             mobile: formData.mobile,
             email: formData.email,
@@ -22,52 +47,38 @@ class EmailService {
         try {
             const response = await emailjs.send(this.serviceID, this.templateID, templateParams);
             console.log('Email sent successfully:', response);
-            // Send reply email
             await this.sendReplyEmail(formData);
             return { success: true };
         } catch (error) {
             console.error('EmailJS error:', error);
-            return { success: false, error };
+            return { success: false, error: error.message };
         }
     }
 
     async sendReplyEmail(formData) {
-    const replyParams = {
-        location: formData.location,
-        pollutionType: formData.pollutionType,
-        description: formData.description,
-        mobile: formData.mobile,
-        email: formData.email // This should be the user's email
-    };
+        const replyParams = {
+            location: formData.location,
+            pollutionType: formData.issueType,
+            description: formData.description,
+            mobile: formData.mobile,
+            email: formData.email
+        };
 
-    try {
-        const response = await emailjs.send(this.serviceID, this.replyTemplateID, replyParams);
-        console.log('Reply email sent successfully:', response);
-    } catch (error) {
-        console.error('Error sending reply email:', error);
+        try {
+            const response = await emailjs.send(this.serviceID, this.replyTemplateID, replyParams);
+            console.log('Reply email sent successfully:', response);
+        } catch (error) {
+            console.error('Error sending reply email:', error);
+        }
     }
 }
 
-}
-
-// Form Submission Handling
-document.getElementById('pollutionForm').addEventListener('submit', async function(event) {
-    event.preventDefault(); // Prevent the default form submission
-
-    const formData = {
-        location: document.getElementById('location').value,
-        pollutionType: document.getElementById('pollutionType').value,
-        description: document.getElementById('description').value,
-        mobile: document.getElementById('mobile').value,
-        email: document.getElementById('email').value
-    };
-
-    const emailService = new EmailService();
-    const result = await emailService.sendReport(formData);
-
-    if (result.success) {
-        alert("Report sent successfully!");
-    } else {
-        alert("Failed to send report: " + result.error);
-    }
+document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
 });
